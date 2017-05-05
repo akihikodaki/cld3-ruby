@@ -1,0 +1,19 @@
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-6
+      - libprotobuf-dev
+      - protobuf-compiler
+#env:
+# - PATH=$HOME:$PATH
+language: ruby
+rvm:
+  - 2.3.4
+  - 2.4.1
+before_install:
+  - ln -s /usr/bin/x86_64-linux-gnu-g++-6 $HOME/g++
+  - export "PATH=$HOME:$PATH"
+script:
+  - rake spec
