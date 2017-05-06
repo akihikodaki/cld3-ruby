@@ -79,7 +79,7 @@ module CLD3
     end
   end
 
-  # Do NOT use this class from outside.
+  # Do NOT use this module from outside.
   module Unstable
     extend FFI::Library
 
