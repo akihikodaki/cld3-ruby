@@ -19,23 +19,21 @@ Bundler.setup
 
 require "cld3"
 
-describe CLD3 do
-  describe "NNetLanguageIdentifier" do
-    it "has default parameters and deals with unknown language" do
-      expect(
-          CLD3::NNetLanguageIdentifier
-            .new
-            .find_language("This text is written in English."))
-        .to eq(CLD3::NNetLanguageIdentifier::Result.new(nil, 0, false, 0))
-    end
+describe CLD3::NNetLanguageIdentifier do
+  it "has default parameters and deals with unknown language" do
+    expect(
+        described_class
+          .new
+          .find_language("This text is written in English."))
+      .to eq(CLD3::NNetLanguageIdentifier::Result.new(nil, 0, false, 0))
+  end
 
-    it "can have custom parameters and deals with known language" do
-      # See ext/cld3/ext/src/language_identifier_main.cc
-      expect(
-          CLD3::NNetLanguageIdentifier
-            .new(0, 1000)
-            .find_language("This text is written in English."))
-        .to eq(CLD3::NNetLanguageIdentifier::Result.new("en", 0.9996357560157776, true, 1.0))
-    end
+  it "can have custom parameters and deals with known language" do
+    # See ext/cld3/ext/src/language_identifier_main.cc
+    expect(
+        described_class
+          .new(0, 1000)
+          .find_language("This text is written in English."))
+      .to eq(CLD3::NNetLanguageIdentifier::Result.new("en", 0.9996357560157776, true, 1.0))
   end
 end
