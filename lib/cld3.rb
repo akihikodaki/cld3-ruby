@@ -44,7 +44,7 @@ module CLD3
     RELIABILITY_HR_BS_THRESHOLD = 0.5
 
     # Information about a predicted language.
-    Result = Struct.new("Result", :language, :probability, :is_reliable, :proportion)
+    Result = Struct.new("Result", :language, :probability, :reliable?, :proportion)
 
     def initialize(minNumBytes = MIN_NUM_BYTES_TO_CONSIDER, maxNumBytes = MAX_NUM_BYTES_TO_CONSIDER)
       @cc = Pointer.new(CLD3::Unstable.new_NNetLanguageIdentifier(minNumBytes, maxNumBytes))
@@ -66,7 +66,7 @@ module CLD3
       Result.new(
           language == "und" ? nil : language,
           cc_result[:probability],
-          cc_result[:is_reliable],
+          cc_result[:reliable?],
           cc_result[:proportion])
     end
 
@@ -86,7 +86,7 @@ module CLD3
     ffi_lib File.join(File.expand_path(File.dirname(__FILE__)), "..", "ext", "cld3", FFI.map_library_name("cld3"))
 
     class NNetLanguageIdentifierResult < FFI::Struct
-      layout :language_data, :pointer, :language_size, :size_t, :probability, :float, :proportion, :float, :is_reliable, :bool
+      layout :language_data, :pointer, :language_size, :size_t, :probability, :float, :proportion, :float, :reliable?, :bool
     end
 
     attach_function :delete_NNetLanguageIdentifier, [ :pointer ], :void
