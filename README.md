@@ -3,6 +3,7 @@ cld3-ruby is an interface of Compact Language Detector v3 (CLD3) for Ruby.
 
 ## Installation
 ### Prerequisites
+* [Bundler](http://bundler.io/)
 * C++ compiler
 * [Protocol buffers](https://developers.google.com/protocol-buffers/)
 * [Rake](https://ruby.github.io/rake/)
