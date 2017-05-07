@@ -24,13 +24,8 @@ limitations under the License.
   #define EXPORT __attribute__ ((visibility ("default")))
 #endif
 
-class NNetLanguageIdentifier : public chrome_lang_id::NNetLanguageIdentifier {
- public:
-  inline NNetLanguageIdentifier(int min_num_bytes, int max_num_bytes)
-      : chrome_lang_id::NNetLanguageIdentifier(min_num_bytes, max_num_bytes)
-  {
-  }
-
+struct NNetLanguageIdentifier {
+  chrome_lang_id::NNetLanguageIdentifier context;
   std::string language;
 };
 
@@ -51,7 +46,7 @@ extern "C" {
                                                             const char *data,
                                                             size_t size) {
     auto instance = reinterpret_cast<NNetLanguageIdentifier *>(pointer);
-    auto result = instance->FindLanguage(std::string(data, size));
+    auto result = instance->context.FindLanguage(std::string(data, size));
     instance->language = std::move(result.language);
 
     return (struct result) {
@@ -67,6 +62,6 @@ extern "C" {
   }
 
   EXPORT void *new_NNetLanguageIdentifier(int min_num_bytes, int max_num_bytes) {
-    return new NNetLanguageIdentifier(min_num_bytes, max_num_bytes);
+    return new NNetLanguageIdentifier{{min_num_bytes, max_num_bytes}, {}};
   }
 }
