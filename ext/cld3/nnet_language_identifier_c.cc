@@ -32,7 +32,7 @@ struct NNetLanguageIdentifier {
 extern "C" {
   #include <stddef.h>
 
-  struct result {
+  typedef struct {
     struct {
       const char *data;
       size_t size;
@@ -40,16 +40,16 @@ extern "C" {
     float probability;
     float proportion;
     bool is_reliable;
-  };
+  } Result;
 
-  EXPORT struct result NNetLanguageIdentifier_find_language(void *pointer,
-                                                            const char *data,
-                                                            size_t size) {
+  EXPORT Result NNetLanguageIdentifier_find_language(void *pointer,
+                                                     const char *data,
+                                                     size_t size) {
     auto instance = reinterpret_cast<NNetLanguageIdentifier *>(pointer);
     auto result = instance->context.FindLanguage(std::string(data, size));
     instance->language = std::move(result.language);
 
-    return (struct result) {
+    return Result {
         { instance->language.data(), instance->language.size() },
         std::move(result.probability),
         std::move(result.proportion),
