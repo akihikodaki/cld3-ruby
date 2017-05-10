@@ -83,7 +83,9 @@ module CLD3
   module Unstable
     extend FFI::Library
 
-    ffi_lib File.join(File.expand_path(File.dirname(__FILE__)), "..", "ext", "cld3", FFI.map_library_name("cld3"))
+    lib_name = FFI::Platform.mac? ? 'libcld3.bundle' : FFI.map_library_name("cld3")
+
+    ffi_lib File.join(File.expand_path(File.dirname(__FILE__)), "..", "ext", "cld3", lib_name)
 
     class NNetLanguageIdentifierResult < FFI::Struct
       layout :language_data, :pointer, :language_size, :size_t, :probability, :float, :proportion, :float, :reliable?, :bool
