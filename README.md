@@ -16,7 +16,7 @@ Build a gem with `rake` command.
 ## Contact
 
 To ask questions or report issues please open issues at
-https://github.com/akihikodaki/issues.
+https://github.com/akihikodaki/cld3-ruby/issues.
 
 ## Credits
 
