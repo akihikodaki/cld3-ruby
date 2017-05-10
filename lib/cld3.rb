@@ -18,6 +18,7 @@
 # ==============================================================================
 
 require "ffi"
+require "rbconfig"
 
 # Module providing an interface for Compact Language Detector v3 (CLD3)
 module CLD3
@@ -83,7 +84,7 @@ module CLD3
   module Unstable
     extend FFI::Library
 
-    ffi_lib File.join(File.expand_path(File.dirname(__FILE__)), "..", "ext", "cld3", FFI.map_library_name("cld3"))
+    ffi_lib File.join(File.expand_path(File.dirname(__FILE__)), "..", "ext", "cld3", "libcld3." + RbConfig::CONFIG["DLEXT"])
 
     class NNetLanguageIdentifierResult < FFI::Struct
       layout :language_data, :pointer, :language_size, :size_t, :probability, :float, :proportion, :float, :reliable?, :bool
