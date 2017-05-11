@@ -17,7 +17,15 @@
 require "mkmf"
 
 # Check pkg-config first to inform the library is missing if so.
-pkg_config("protobuf")
+def have_protobuf?
+  checking_for("protobuf by pkg-config") do
+    pkg_config("protobuf")
+  end
+end
+
+unless have_protobuf?
+  abort "Failed to locate protobuf"
+end
 
 FileUtils.mkdir_p("cld_3/protos")
 FileUtils.mkdir_p("script_span")
