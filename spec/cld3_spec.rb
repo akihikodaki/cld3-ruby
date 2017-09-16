@@ -34,6 +34,6 @@ describe CLD3::NNetLanguageIdentifier do
         described_class
           .new(0, 1000)
           .find_language("This text is written in English."))
-      .to eq(CLD3::NNetLanguageIdentifier::Result.new("en", 0.9996357560157776, true, 1.0))
+      .to eq(CLD3::NNetLanguageIdentifier::Result.new(:en, 0.9996357560157776, true, 1.0))
   end
 end
