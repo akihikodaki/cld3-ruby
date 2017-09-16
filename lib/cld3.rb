@@ -52,7 +52,7 @@ module CLD3
     # Information about a predicted language.
     # This is an instance of Struct with the following members:
     #
-    # [language]    This is String object.
+    # [language]    This is symbol or nil.
     #
     # [probability] Language probability. This is Numeric object.
     #
@@ -84,11 +84,29 @@ module CLD3
       language = cc_result[:language_data].read_bytes(cc_result[:language_size])
 
       Result.new(
-          language == "und" ? nil : language,
+          language == "und" ? nil : language.to_sym,
           cc_result[:probability],
           cc_result[:reliable?],
           cc_result[:proportion])
     end
+  end
+
+  # Encapsulates the TaskContext specifying only the parameters for the model.
+  # The model weights are loaded statically.
+  module TaskContextParams
+    # This is an frozen Array object containing symbols.
+    LANGUAGE_NAMES = [
+      :eo, :co, :eu, :ta, :de, :mt, :ps, :te, :su, :uz, :'zh-Latn', :ne,
+      :nl, :sw, :sq, :hmn, :ja, :no, :mn, :so, :ko, :kk, :sl, :ig,
+      :mr, :th, :zu, :ml, :hr, :bs, :lo, :sd, :cy, :hy, :uk, :pt,
+      :lv, :iw, :cs, :vi, :jv, :be, :km, :mk, :tr, :fy, :am, :zh,
+      :da, :sv, :fi, :ht, :af, :la, :id, :fil, :sm, :ca, :el, :ka,
+      :sr, :it, :sk, :ru, :'ru-Latn', :bg, :ny, :fa, :haw, :gl, :et,
+      :ms, :gd, :'bg-Latn', :ha, :is, :ur, :mi, :hi, :bn, :'hi-Latn', :fr,
+      :yi, :hu, :xh, :my, :tg, :ro, :ar, :lb, :'el-Latn', :st, :ceb,
+      :kn, :az, :si, :ky, :mg, :en, :gu, :es, :pl, :'ja-Latn', :ga, :lt,
+      :sn, :yo, :pa, :ku,
+    ].freeze
   end
 
   # :nodoc: all
