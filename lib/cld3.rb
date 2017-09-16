@@ -48,7 +48,7 @@ module CLD3
     Result = Struct.new("Result", :language, :probability, :reliable?, :proportion)
 
     def initialize(minNumBytes = MIN_NUM_BYTES_TO_CONSIDER, maxNumBytes = MAX_NUM_BYTES_TO_CONSIDER)
-      @cc = Pointer.new(CLD3::Unstable.new_NNetLanguageIdentifier(minNumBytes, maxNumBytes))
+      @cc = CLD3::Unstable::NNetLanguageIdentifier::Pointer.new(CLD3::Unstable.new_NNetLanguageIdentifier(minNumBytes, maxNumBytes))
     end
 
     # Finds the most likely language for the given text, along with additional
@@ -70,14 +70,6 @@ module CLD3
           cc_result[:reliable?],
           cc_result[:proportion])
     end
-
-    private
-
-    class Pointer < FFI::AutoPointer
-      def self.release(pointer)
-        CLD3::Unstable.delete_NNetLanguageIdentifier(pointer)
-      end
-    end
   end
 
   # Do NOT use this module from outside.
@@ -86,8 +78,16 @@ module CLD3
 
     ffi_lib File.join(File.expand_path(File.dirname(__FILE__)), "..", "ext", "cld3", "libcld3." + RbConfig::CONFIG["DLEXT"])
 
-    class NNetLanguageIdentifierResult < FFI::Struct
-      layout :language_data, :pointer, :language_size, :size_t, :probability, :float, :proportion, :float, :reliable?, :bool
+    module NNetLanguageIdentifier
+      class Pointer < FFI::AutoPointer
+        def self.release(pointer)
+          CLD3::Unstable.delete_NNetLanguageIdentifier(pointer)
+        end
+      end
+
+      class Result < FFI::Struct
+        layout :language_data, :pointer, :language_size, :size_t, :probability, :float, :proportion, :float, :reliable?, :bool
+      end
     end
 
     attach_function :delete_NNetLanguageIdentifier, [ :pointer ], :void
@@ -95,6 +95,6 @@ module CLD3
     attach_function :new_NNetLanguageIdentifier, [ :int, :int ], :pointer
 
     attach_function :NNetLanguageIdentifier_find_language,
-        [ :pointer, :buffer_in, :size_t ], NNetLanguageIdentifierResult.by_value
+        [ :pointer, :buffer_in, :size_t ], NNetLanguageIdentifier::Result.by_value
   end
 end
