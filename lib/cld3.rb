@@ -26,27 +26,44 @@ module CLD3
   class NNetLanguageIdentifier
     # Min number of bytes needed to make a prediction if the construcotr is
     # called without the corresponding parameter.
+    # This is Numeric object.
     MIN_NUM_BYTES_TO_CONSIDER = 140
 
     # Max number of bytes needed to make a prediction if the construcotr is
     # called without the corresponding parameter.
+    # This is Numeric object.
     MAX_NUM_BYTES_TO_CONSIDER = 700
 
     # Max number of input bytes to process.
+    # This is Numeric object.
     MAX_NUM_INPUT_BYTES_TO_CONSIDER = 10000
 
     # Predictions with probability greater than or equal to this threshold are
     # marked as reliable. This threshold was optimized on a set of text segments
     # extracted from wikipedia, and results in an overall precision, recall,
     # and f1 equal to 0.9760, 0.9624, and 0.9692, respectively.
+    # This is Numeric object.
     RELIABILITY_THRESHOLD = 0.7
 
     # Reliability threshold for the languages hr and bs.
+    # This is Numeric object.
     RELIABILITY_HR_BS_THRESHOLD = 0.5
 
     # Information about a predicted language.
+    # This is an instance of Struct with the following members:
+    #
+    # [language]    This is String object.
+    #
+    # [probability] Language probability. This is Numeric object.
+    #
+    # [reliable?]   Whether the prediction is reliable. This is true or false.
+    #
+    # [proportion]  Proportion of bytes associated with the language. If
+    #               #find_language is called, this variable is set to 1.
+    #               This is Numeric object.
     Result = Struct.new("Result", :language, :probability, :reliable?, :proportion)
 
+    # The arguments are two String objects.
     def initialize(minNumBytes = MIN_NUM_BYTES_TO_CONSIDER, maxNumBytes = MAX_NUM_BYTES_TO_CONSIDER)
       @cc = CLD3::Unstable::NNetLanguageIdentifier::Pointer.new(CLD3::Unstable.new_NNetLanguageIdentifier(minNumBytes, maxNumBytes))
     end
@@ -54,8 +71,10 @@ module CLD3
     # Finds the most likely language for the given text, along with additional
     # information (e.g., probability). The prediction is based on the first N
     # bytes where N is the minumum between the number of interchange valid UTF8
-    # bytes and max_num_bytes_. If N is less than min_num_bytes_ long, then this
-    # function returns nil.
+    # bytes and +max_num_bytes_+. If N is less than +min_num_bytes_+ long, then
+    # this function returns nil as language.
+    # The argument is a String object.
+    # The returned value of this function is an instance of Result.
     def find_language(text)
       text_utf8 = text.encode(Encoding::UTF_8)
       pointer = FFI::MemoryPointer.new(:char, text_utf8.bytesize)
@@ -72,6 +91,7 @@ module CLD3
     end
   end
 
+  # :nodoc: all
   # Do NOT use this module from outside.
   module Unstable
     extend FFI::Library

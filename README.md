@@ -40,6 +40,17 @@ If you found an issue and managed to fix it and agree to share the fix under
 request at https://github.com/akihikodaki/cld3-ruby/pulls. Your contribution
 would be appreciated by other users and recorded with Git.
 
+## Versioning
+
+The version has 3 parts: major, minor, and patch. They are joined with . as
+delimiters in the order.
+
+The increment of the major version and the minor version indicates it can involve
+any change.
+
+The increment of the patch version indicates there is no change of the supported
+languages and no change of the existing APIs except `CLD3::Unstable`.
+
 ## Contact
 
 To ask questions or report issues please open issues at
