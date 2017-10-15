@@ -16,6 +16,16 @@
 
 require "mkmf"
 
+def ln_fallback(source, destination)
+  FileUtils.ln(source, destination)
+rescue
+  begin
+    FileUtils.ln_s(source, destination)
+  rescue
+    FileUtils.cp(source, destination)
+  end
+end
+
 # Check pkg-config first to inform the library is missing if so.
 pkg_config("protobuf") or abort "Failed to locate protobuf"
 
@@ -24,7 +34,7 @@ FileUtils.mkdir_p("script_span")
 
 [ "feature_extractor", "sentence", "task_spec" ].each {|name|
   `protoc '#{name}.proto' --cpp_out=.`
-  FileUtils.ln("#{name}.pb.h", "cld_3/protos/#{name}.pb.h")
+  ln_fallback("#{name}.pb.h", "cld_3/protos/#{name}.pb.h")
 }
 
 [
@@ -42,7 +52,7 @@ FileUtils.mkdir_p("script_span")
   "utf8scannot_lettermarkspecial.h",
   "utf8statetable.h"
 ].each {|name|
-  FileUtils.ln("#{name}", "script_span/#{name}")
+  ln_fallback("#{name}", "script_span/#{name}")
 }
 
 $CXXFLAGS += " -fvisibility=hidden -std=c++11"
