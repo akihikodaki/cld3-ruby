@@ -10,8 +10,9 @@ addons:
 # - PATH=$HOME:$PATH
 language: ruby
 rvm:
-  - 2.3.4
-  - 2.4.1
+  - 2.3.6
+  - 2.4.3
+  - 2.5.0
 before_install:
   - ln -s /usr/bin/x86_64-linux-gnu-g++-6 "$HOME/g++"
   - export "PATH=$HOME:$PATH"
