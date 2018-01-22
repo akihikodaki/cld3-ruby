@@ -24,12 +24,37 @@ cld3.find_language("здравствуйте") # => #<struct Struct::Result lang
 * [RubyGems](https://rubygems.org/)
 
 ### Instructions
-`Rakefile` includes a Rake task to put this code into files buildable as a gem.
-Build a gem with `rake` command.
-
-## Troubleshooting Setup Problems
 I (Akihiko Odaki) recommend to setup this library installing via `gem`.
 
+You can also build this library by yourself. `Rakefile` includes a Rake task to
+put this code into files buildable as a gem. Build a gem with `rake` command.
+
+### Platform-specific information
+
+#### JRuby
+JRuby has a bug which prevents the feature detection. Apply the following
+change:
+https://github.com/jruby/jruby/pull/4118/commits/edad375ef4dcf195b19ce0afe4befac66468c736
+
+#### OpenBSD
+Ruby has a bug which recognizes non-fatal linker warnings as fatal. Apply the
+following patch to Ruby to workaround the bug.
+
+```diff
+--- a/lib/mkmf.rb
++++ b/lib/mkmf.rb
+@@ -657,7 +657,7 @@ def with_ldflags(flags)
+   end
+ 
+   def try_ldflags(flags, opts = {})
+-    try_link(MAIN_DOES_NOTHING, flags, {:werror => true}.update(opts))
++    try_link(MAIN_DOES_NOTHING, flags, {:werror => false}.update(opts))
+   end
+ 
+   def append_ldflags(flags, *opts)
+```
+
+### Troubleshooting
 `gem install cld3` triggers native library building. If it fails, you are likely
 to missing required facilities. Make sure C++ compiler and protocol buffers
 is installed. I recommend [GCC](https://gcc.gnu.org/) as a C++ compiler. Ruby is
@@ -63,7 +88,7 @@ The increment of the major version and the minor version indicates it can involv
 any change.
 
 The increment of the patch version indicates there is no change of the supported
-languages and no change of the existing APIs except `CLD3::Unstable`.
+languages and no change of the existing APIs.
 
 ## Contact
 
@@ -72,4 +97,5 @@ https://github.com/akihikodaki/cld3-ruby/issues.
 
 ## Credits
 
-This program was written by Akihiko Odaki. CLD3 was written by its own authors.
+This program was written by Akihiko Odaki and other contributors. CLD3 was
+written by its own authors.
