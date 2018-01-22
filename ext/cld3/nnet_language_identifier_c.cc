@@ -14,7 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+#include <cstddef>
 #include <iostream>
+#include <string>
+#include <utility>
 #include "nnet_language_identifier.h"
 
 #if defined _WIN32 || defined __CYGWIN__
@@ -28,36 +31,34 @@ struct NNetLanguageIdentifier {
   std::string language;
 };
 
+struct Result {
+  struct {
+    const char *data;
+    std::size_t size;
+  } language;
+  float probability;
+  float proportion;
+  bool is_reliable;
+};
+
 extern "C" {
-  #include <stddef.h>
-
-  typedef struct {
-    struct {
-      const char *data;
-      size_t size;
-    } language;
-    float probability;
-    float proportion;
-    bool is_reliable;
-  } Result;
-
   EXPORT Result NNetLanguageIdentifier_find_language(void *pointer,
                                                      const char *data,
-                                                     size_t size) {
-    auto instance = reinterpret_cast<NNetLanguageIdentifier *>(pointer);
+                                                     std::size_t size) {
+    auto instance = static_cast<NNetLanguageIdentifier *>(pointer);
     auto result = instance->context.FindLanguage(std::string(data, size));
     instance->language = std::move(result.language);
 
     return Result {
         { instance->language.data(), instance->language.size() },
-        std::move(result.probability),
-        std::move(result.proportion),
-        std::move(result.is_reliable)
+        result.probability,
+        result.proportion,
+        result.is_reliable
     };
   }
 
   EXPORT void delete_NNetLanguageIdentifier(void *pointer) {
-    delete reinterpret_cast<NNetLanguageIdentifier *>(pointer);
+    delete static_cast<NNetLanguageIdentifier *>(pointer);
   }
 
   EXPORT void *new_NNetLanguageIdentifier(int min_num_bytes, int max_num_bytes) {
