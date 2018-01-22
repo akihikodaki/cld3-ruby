@@ -65,7 +65,7 @@ module CLD3
 
     # The arguments are two String objects.
     def initialize(minNumBytes = MIN_NUM_BYTES_TO_CONSIDER, maxNumBytes = MAX_NUM_BYTES_TO_CONSIDER)
-      @cc = CLD3::Unstable::NNetLanguageIdentifier::Pointer.new(CLD3::Unstable.new_NNetLanguageIdentifier(minNumBytes, maxNumBytes))
+      @cc = Unstable::NNetLanguageIdentifier::Pointer.new(Unstable.new_NNetLanguageIdentifier(minNumBytes, maxNumBytes))
     end
 
     # Finds the most likely language for the given text, along with additional
@@ -80,7 +80,7 @@ module CLD3
       pointer = FFI::MemoryPointer.new(:char, text_utf8.bytesize)
       pointer.put_bytes(0, text_utf8)
 
-      cc_result = CLD3::Unstable.NNetLanguageIdentifier_find_language(@cc, pointer, text_utf8.bytesize)
+      cc_result = Unstable.NNetLanguageIdentifier_find_language(@cc, pointer, text_utf8.bytesize)
       language = cc_result[:language_data].read_bytes(cc_result[:language_size])
 
       Result.new(
@@ -109,8 +109,6 @@ module CLD3
     ].freeze
   end
 
-  # :nodoc: all
-  # Do NOT use this module from outside.
   module Unstable
     extend FFI::Library
 
@@ -119,7 +117,7 @@ module CLD3
     module NNetLanguageIdentifier
       class Pointer < FFI::AutoPointer
         def self.release(pointer)
-          CLD3::Unstable.delete_NNetLanguageIdentifier(pointer)
+          Unstable.delete_NNetLanguageIdentifier(pointer)
         end
       end
 
@@ -135,4 +133,6 @@ module CLD3
     attach_function :NNetLanguageIdentifier_find_language,
         [ :pointer, :buffer_in, :size_t ], NNetLanguageIdentifier::Result.by_value
   end
+
+  private_constant :Unstable
 end
