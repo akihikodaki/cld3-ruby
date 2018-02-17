@@ -1,21 +1,22 @@
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: false
+    - os: osx
+      before_install:
+        - brew update
+        - brew list protobuf &>/dev/null || brew install protobuf
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
-      - g++-6
       - libprotobuf-dev
       - protobuf-compiler
-#env:
-# - PATH=$HOME:$PATH
 language: ruby
 rvm:
-  - 2.3.6
-  - 2.4.3
   - 2.5.0
+  - 2.4.3
+  - 2.3.6
   - rbx-3
-before_install:
-  - ln -s /usr/bin/x86_64-linux-gnu-g++-6 "$HOME/g++"
-  - export "PATH=$HOME:$PATH"
 script:
   - rake spec
