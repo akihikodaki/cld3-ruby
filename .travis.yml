@@ -1,6 +1,9 @@
 matrix:
   include:
     - os: linux
+      dist: xenial
+      sudo: false
+    - os: linux
       dist: trusty
       sudo: false
     - os: osx
