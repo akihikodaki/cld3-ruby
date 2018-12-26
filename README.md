@@ -31,6 +31,11 @@ put this code into files buildable as a gem. Build a gem with `rake` command.
 
 ### Platform-specific information
 
+#### FreeBSD
+FreeBSD port is available as `rubygem-cld3` in `textproc` category.
+
+https://svnweb.freebsd.org/ports/head/textproc/rubygem-cld3/
+
 #### JRuby
 JRuby has a bug which prevents the feature detection. Apply the following
 change:
