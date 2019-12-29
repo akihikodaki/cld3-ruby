@@ -17,10 +17,15 @@ addons:
       - protobuf-compiler
 language: ruby
 rvm:
+  - ruby-head
+  - 2.7.0
   - 2.6.3
   - 2.5.5
   - 2.4.6
   - 2.3.8
   - rbx-3
+matrix:
+  allow_failures:
+  - rvm: ruby-head
 script:
   - rake spec
