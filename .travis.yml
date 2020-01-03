@@ -29,6 +29,5 @@ rvm:
   - 2.6.5
   - 2.5.7
   - 2.4.9
-  - rbx-3
 script:
   - rake spec
