@@ -1,6 +1,9 @@
 matrix:
   include:
     - os: linux
+      dist: bionic
+      sudo: false
+    - os: linux
       dist: xenial
       sudo: false
     - os: linux
@@ -18,10 +21,9 @@ addons:
 language: ruby
 rvm:
   - 2.7.0
-  - 2.6.3
-  - 2.5.5
-  - 2.4.6
-  - 2.3.8
+  - 2.6.5
+  - 2.5.7
+  - 2.4.9
   - rbx-3
 script:
   - rake spec
