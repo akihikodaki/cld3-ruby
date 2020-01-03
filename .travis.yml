@@ -18,6 +18,11 @@ addons:
     packages:
       - libprotobuf-dev
       - protobuf-compiler
+arch:
+  - amd64
+  - arm64
+  - ppc64le
+  - s390x
 language: ruby
 rvm:
   - 2.7.0
