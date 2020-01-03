@@ -1,0 +1,39 @@
+name: Ruby Gem
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+      - actions
+
+jobs:
+  spec:
+    name: Spec
+    runs-on: ${{ matrix.runner }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - run: ${{ matrix.setup }}
+    - run: |
+        git submodule update --init
+        rake spec
+    strategy:
+      matrix:
+        ruby: [2.7.2, 2.6.6, 2.5.8, 2.4.10]
+        runner: [macos-10.15, ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+        include:
+          - runner: macos-10.15
+            setup: |
+              brew update
+              brew install protobuf
+          - runner: ubuntu-16.04
+            setup: sudo apt-get install libprotobuf-dev protobuf-compiler
+          - runner: ubuntu-18.04
+            setup: sudo apt-get install libprotobuf-dev protobuf-compiler
+          - runner: ubuntu-20.04
+            setup: sudo apt-get install libprotobuf-dev protobuf-compiler
