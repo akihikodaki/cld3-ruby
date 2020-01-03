@@ -15,6 +15,7 @@
 #==============================================================================
 
 require "rake/clean"
+require "rubygems/package_task"
 
 # Copied from ext/cld3/ext/src/BUILD.gn
 ext_name = FileList[
@@ -97,7 +98,7 @@ ext_intermediate = ext_name.pathmap("intermediate/ext/cld3/%p")
 int_intermediate = int_path.pathmap("intermediate/%p")
 
 desc "Run the default task"
-task :default => :build
+task :default => :package
 
 desc "Run the tests"
 task "spec" => "intermediate/ext/cld3/Makefile" do
@@ -109,10 +110,11 @@ file "intermediate/ext/cld3/Makefile" => :prepare do
   sh "cd intermediate/ext/cld3 && ruby extconf.rb"
 end
 
-desc "Builds a gem"
-task :build => :prepare do
-  sh "cd intermediate && gem build cld3"
+Gem::PackageTask.new(Gem::Specification.load("cld3.gemspec")) do |task|
+  task.package_dir = "intermediate"
 end
+
+Rake::Task[:package].enhance [:prepare]
 
 desc "Prepare files for building gem and testing in intermediate directory"
 task :prepare =>
