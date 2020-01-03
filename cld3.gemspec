@@ -16,7 +16,7 @@
 
 Gem::Specification.new do |gem|
   gem.name = "cld3"
-  gem.version = "3.2.4"
+  gem.version = "3.2.5"
   gem.summary = "Compact Language Detector v3 (CLD3)"
   gem.description = "Compact Language Detector v3 (CLD3) is a neural network model for language identification."
   gem.license = "Apache-2.0"
@@ -24,8 +24,8 @@ Gem::Specification.new do |gem|
   gem.author = "Akihiko Odaki"
   gem.email = "akihiko.odaki.4i@stu.hosei.ac.jp"
   gem.required_ruby_version = [ ">= 2.3.0", "< 2.8.0" ]
-  gem.add_dependency "ffi", [ ">= 1.1.0", "< 1.11.0" ]
-  gem.add_development_dependency "rspec", [ ">=3.0.0", "< 3.9.0" ]
+  gem.add_dependency "ffi", [ ">= 1.1.0", "< 1.12.0" ]
+  gem.add_development_dependency "rspec", [ ">=3.0.0", "< 3.10.0" ]
   gem.files = Dir[
     "Gemfile", "LICENSE", "LICENSE_CLD3", "README.md",
     "cld3.gemspec", "ext/**/*", "lib/**/*"
