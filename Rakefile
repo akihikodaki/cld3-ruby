@@ -160,6 +160,6 @@ directory "intermediate/ext/cld3"
 CLEAN.include("intermediate/LICENSE_CLD3")
 CLEAN.include("intermediate/cld3-*.gem")
 CLEAN.include("intermediate/ext")
-CLEAN.include(int_path.pathmap("intermediate/%p"))
+CLEAN.include(int_intermediate)
 
 CLOBBER.include("intermediate")
