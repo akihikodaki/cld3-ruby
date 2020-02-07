@@ -78,16 +78,21 @@ module CLD3
     def find_language(text)
       text_utf8 = text.encode(Encoding::UTF_8)
       pointer = FFI::MemoryPointer.new(:char, text_utf8.bytesize)
-      pointer.put_bytes(0, text_utf8)
 
-      cc_result = Unstable.NNetLanguageIdentifier_find_language(@cc, pointer, text_utf8.bytesize)
-      language = cc_result[:language_data].read_bytes(cc_result[:language_size])
+      begin
+        pointer.put_bytes(0, text_utf8)
 
-      Result.new(
-          language == "und" ? nil : language.to_sym,
-          cc_result[:probability],
-          cc_result[:reliable?],
-          cc_result[:proportion])
+        cc_result = Unstable.NNetLanguageIdentifier_find_language(@cc, pointer, text_utf8.bytesize)
+        language = cc_result[:language_data].read_bytes(cc_result[:language_size])
+
+        Result.new(
+            language == "und" ? nil : language.to_sym,
+            cc_result[:probability],
+            cc_result[:reliable?],
+            cc_result[:proportion])
+      ensure
+        pointer.free
+      end
     end
   end
 
