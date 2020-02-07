@@ -64,8 +64,8 @@ module CLD3
     Result = Struct.new("Result", :language, :probability, :reliable?, :proportion)
 
     # The arguments are two String objects.
-    def initialize(minNumBytes = MIN_NUM_BYTES_TO_CONSIDER, maxNumBytes = MAX_NUM_BYTES_TO_CONSIDER)
-      @cc = Unstable::NNetLanguageIdentifier::Pointer.new(Unstable.new_NNetLanguageIdentifier(minNumBytes, maxNumBytes))
+    def initialize(min_num_bytes = MIN_NUM_BYTES_TO_CONSIDER, max_num_bytes = MAX_NUM_BYTES_TO_CONSIDER)
+      @cc = Unstable::NNetLanguageIdentifier::Pointer.new(Unstable.new_NNetLanguageIdentifier(min_num_bytes, max_num_bytes))
     end
 
     # Finds the most likely language for the given text, along with additional
