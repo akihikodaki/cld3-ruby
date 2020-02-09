@@ -49,6 +49,11 @@ module CLD3
     # This is Numeric object.
     RELIABILITY_HR_BS_THRESHOLD = 0.5
 
+    # Holds probability that Span, specified by start/end indices, is a given
+    # language. The langauge is not stored here; it can be found in Result, which
+    # holds an Array of SpanInfo.
+    SpanInfo = Struct.new(:start_index, :end_index, :probability)
+
     # Information about a predicted language.
     # This is an instance of Struct with the following members:
     #
@@ -61,7 +66,10 @@ module CLD3
     # [proportion]  Proportion of bytes associated with the language. If
     #               #find_language is called, this variable is set to 1.
     #               This is Numeric object.
-    Result = Struct.new("Result", :language, :probability, :reliable?, :proportion)
+    #
+    # [byte_ranges] Specifies the byte ranges in UTF-8 that |language| applies to.
+    #               This is an Array of SpanInfo.
+    Result = Struct.new(:language, :probability, :reliable?, :proportion, :byte_ranges)
 
     # The arguments are two String objects.
     def initialize(min_num_bytes = MIN_NUM_BYTES_TO_CONSIDER, max_num_bytes = MAX_NUM_BYTES_TO_CONSIDER)
@@ -82,17 +90,35 @@ module CLD3
       begin
         pointer.put_bytes(0, text_utf8)
 
-        cc_result = Unstable.NNetLanguageIdentifier_find_language(@cc, pointer, text_utf8.bytesize)
-        language = cc_result[:language_data].read_bytes(cc_result[:language_size])
-
-        Result.new(
-            language == "und" ? nil : language.to_sym,
-            cc_result[:probability],
-            cc_result[:reliable?],
-            cc_result[:proportion])
+        result = Unstable.NNetLanguageIdentifier_find_language(@cc, pointer, text_utf8.bytesize)
+        begin
+          convert_result Unstable::NNetLanguageIdentifier::Result.new(result)
+        ensure
+          Unstable.delete_result result
+        end
       ensure
         pointer.free
       end
+    end
+
+    private
+
+    def convert_result(result)
+      language = result[:language_data].read_bytes(result[:language_size])
+
+      cursor = result[:byte_ranges_data]
+      byte_ranges = result[:byte_ranges_size].times.map do
+        info = Unstable::NNetLanguageIdentifier::SpanInfo.new(cursor)
+        cursor += Unstable::NNetLanguageIdentifier::SpanInfo.size
+        SpanInfo.new(info[:start_index], info[:end_index], info[:probability])
+      end
+
+      Result.new(
+          language == "und" ? nil : language.to_sym,
+          result[:probability],
+          result[:reliable?],
+          result[:proportion],
+          byte_ranges)
     end
   end
 
@@ -126,17 +152,23 @@ module CLD3
         end
       end
 
+      class SpanInfo < FFI::Struct
+        layout :start_index, :int, :end_index, :int, :probability, :float
+      end
+
       class Result < FFI::Struct
-        layout :language_data, :pointer, :language_size, :size_t, :probability, :float, :proportion, :float, :reliable?, :bool
+        layout :language_data, :pointer, :language_size, :size_t, :byte_ranges_data, :pointer, :byte_ranges_size, :size_t, :probability, :float, :proportion, :float, :reliable?, :bool
       end
     end
 
     attach_function :delete_NNetLanguageIdentifier, [ :pointer ], :void
 
+    attach_function :delete_result, [ :pointer ], :void
+
     attach_function :new_NNetLanguageIdentifier, [ :int, :int ], :pointer
 
     attach_function :NNetLanguageIdentifier_find_language,
-        [ :pointer, :buffer_in, :size_t ], NNetLanguageIdentifier::Result.by_value
+        [ :pointer, :buffer_in, :size_t ], :pointer
   end
 
   private_constant :Unstable

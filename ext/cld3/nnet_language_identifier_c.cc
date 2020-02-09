@@ -26,42 +26,60 @@ limitations under the License.
   #define EXPORT __attribute__ ((visibility ("default")))
 #endif
 
-struct NNetLanguageIdentifier {
-  chrome_lang_id::NNetLanguageIdentifier context;
-  std::string language;
-};
-
 struct Result {
   struct {
     const char *data;
     std::size_t size;
   } language;
+  struct {
+    const chrome_lang_id::NNetLanguageIdentifier::SpanInfo *data;
+    std::size_t size;
+  } byte_ranges;
   float probability;
   float proportion;
   bool is_reliable;
 };
 
+struct OwningResult {
+  OwningResult(chrome_lang_id::NNetLanguageIdentifier::Result&& result) {
+    references.language = std::move(result.language);
+    references.byte_ranges = std::move(result.byte_ranges);
+    plain.language.data = references.language.data();
+    plain.language.size = references.language.size();
+    plain.byte_ranges.data = references.byte_ranges.data();
+    plain.byte_ranges.size = references.byte_ranges.size();
+    plain.probability = result.probability;
+    plain.proportion = result.proportion;
+    plain.is_reliable = result.is_reliable;
+  }
+
+  Result plain;
+  struct {
+    std::string language;
+    std::vector<chrome_lang_id::NNetLanguageIdentifier::SpanInfo> byte_ranges;
+  } references;
+};
+
 extern "C" {
-  EXPORT Result NNetLanguageIdentifier_find_language(void *pointer,
-                                                     const char *data,
-                                                     std::size_t size) {
-    auto instance = static_cast<NNetLanguageIdentifier *>(pointer);
-    auto result = instance->context.FindLanguage(std::string(data, size));
-    instance->language = std::move(result.language);
-
-    return Result {
-        { instance->language.data(), instance->language.size() },
-        result.probability,
-        result.proportion,
-        result.is_reliable
-    };
+  EXPORT OwningResult *NNetLanguageIdentifier_find_language(
+      chrome_lang_id::NNetLanguageIdentifier *instance,
+      const char *data,
+      std::size_t size) {
+    return new OwningResult(instance->FindLanguage(std::string(data, size)));
   }
 
-  EXPORT void delete_NNetLanguageIdentifier(void *pointer) {
-    delete static_cast<NNetLanguageIdentifier *>(pointer);
+  EXPORT void delete_NNetLanguageIdentifier(
+      chrome_lang_id::NNetLanguageIdentifier *pointer) {
+    delete pointer;
   }
 
-  EXPORT void *new_NNetLanguageIdentifier(int min_num_bytes, int max_num_bytes) {
-    return new NNetLanguageIdentifier{{min_num_bytes, max_num_bytes}, {}};
+  EXPORT void delete_result(OwningResult *pointer) {
+    delete pointer;
+  }
+
+  EXPORT chrome_lang_id::NNetLanguageIdentifier *new_NNetLanguageIdentifier(
+      int min_num_bytes, int max_num_bytes) {
+    return new chrome_lang_id::NNetLanguageIdentifier(
+        min_num_bytes, max_num_bytes);
   }
 }

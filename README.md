@@ -8,11 +8,11 @@ require 'cld3'
 
 cld3 = CLD3::NNetLanguageIdentifier.new(0, 1000)
 
-cld3.find_language("こんにちは") # => #<struct Struct::Result language=:ja, probability=1.0, reliable?=true, proportion=1.0>
+cld3.find_language("こんにちは") # => #<struct Struct::Result language=:ja, probability=1.0, reliable?=true, proportion=1.0, byte_ranges=[]>
 
-cld3.find_language("This is a pen.") # => #<struct Struct::Result language=:en, probability=0.9999408721923828, reliable?=true, proportion=1.0>
+cld3.find_language("This is a pen.") # => #<struct Struct::Result language=:en, probability=0.9999408721923828, reliable?=true, proportion=1.0, byte_ranges=[]>
 
-cld3.find_language("здравствуйте") # => #<struct Struct::Result language=:ru, probability=0.3140212297439575, reliable?=false, proportion=1.0>
+cld3.find_language("здравствуйте") # => #<struct Struct::Result language=:ru, probability=0.3140212297439575, reliable?=false, proportion=1.0, byte_ranges=[]>
 ```
 
 ## Installation
