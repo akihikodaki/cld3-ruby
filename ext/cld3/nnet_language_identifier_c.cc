@@ -68,6 +68,14 @@ extern "C" {
     return new OwningResult(instance->FindLanguage(std::string(data, size)));
   }
 
+  EXPORT std::vector<chrome_lang_id::NNetLanguageIdentifier::Result>*
+  NNetLanguageIdentifier_find_top_n_most_freq_langs(
+      chrome_lang_id::NNetLanguageIdentifier *instance,
+      const char *data, std::size_t size, int num_langs) {
+    std::string text(data, size);
+    return new auto(instance->FindTopNMostFreqLangs(text, num_langs));
+  }
+
   EXPORT void delete_NNetLanguageIdentifier(
       chrome_lang_id::NNetLanguageIdentifier *pointer) {
     delete pointer;
@@ -77,9 +85,31 @@ extern "C" {
     delete pointer;
   }
 
+  EXPORT void delete_results(
+      std::vector<chrome_lang_id::NNetLanguageIdentifier::Result> *pointer) {
+    delete pointer;
+  }
+
   EXPORT chrome_lang_id::NNetLanguageIdentifier *new_NNetLanguageIdentifier(
       int min_num_bytes, int max_num_bytes) {
     return new chrome_lang_id::NNetLanguageIdentifier(
         min_num_bytes, max_num_bytes);
+  }
+
+  EXPORT Result refer_to_nth_result(
+      std::vector<chrome_lang_id::NNetLanguageIdentifier::Result> *results,
+      std::size_t index) {
+    Result c;
+    auto& cc = (*results)[index];
+
+    c.language.data = cc.language.data();
+    c.language.size = cc.language.size();
+    c.byte_ranges.data = cc.byte_ranges.data();
+    c.byte_ranges.size = cc.byte_ranges.size();
+    c.probability = cc.probability;
+    c.proportion = cc.proportion;
+    c.is_reliable = cc.is_reliable;
+
+    return c;
   }
 }

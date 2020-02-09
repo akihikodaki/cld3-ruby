@@ -101,6 +101,41 @@ module CLD3
       end
     end
 
+    # Splits the input text (up to the first byte, if any, that is not
+    # interchange valid UTF8) into spans based on the script, predicts a language
+    # for each span, and returns a vector storing the top num_langs most frequent
+    # languages along with additional information (e.g., proportions). The number
+    # of bytes considered for each span is the minimum between the size of the
+    # span and +max_num_bytes_+. If more languages are requested than what is
+    # available in the input, then the number of the returned elements will be
+    # the number of the latter. Also, if the size of the span is less than
+    # +min_num_bytes_+ long, then the span is skipped. If the input text is too
+    # long, only the first +MAX_NUM_INPUT_BYTES_TO_CONSIDER+ bytes are processed.
+    # The first argument is a String object.
+    # The second argument is Numeric object.
+    # The returned value of this functions is an Array of Result instances.
+    def find_top_n_most_freq_langs(text, num_langs)
+      text_utf8 = text.encode(Encoding::UTF_8)
+      pointer = FFI::MemoryPointer.new(:char, text_utf8.bytesize)
+
+      begin
+        pointer.put_bytes(0, text_utf8)
+
+        results = Unstable.NNetLanguageIdentifier_find_top_n_most_freq_langs(@cc, pointer, text_utf8.bytesize, num_langs)
+        begin
+          num_langs.times
+            .lazy
+            .map { |index| convert_result Unstable.refer_to_nth_result(results, index) }
+            .take_while { |result| !result.nil? }
+            .to_a
+        ensure
+          Unstable.delete_results results
+        end
+      ensure
+        pointer.free
+      end
+    end
+
     private
 
     def convert_result(result)
@@ -166,10 +201,17 @@ module CLD3
 
     attach_function :delete_result, [ :pointer ], :void
 
+    attach_function :delete_results, [ :pointer ], :void
+
     attach_function :new_NNetLanguageIdentifier, [ :int, :int ], :pointer
+
+    attach_function :refer_to_nth_result, [ :pointer, :size_t ], NNetLanguageIdentifier::Result.by_value
 
     attach_function :NNetLanguageIdentifier_find_language,
         [ :pointer, :buffer_in, :size_t ], :pointer
+
+    attach_function :NNetLanguageIdentifier_find_top_n_most_freq_langs,
+        [ :pointer, :buffer_in, :size_t, :int ], :pointer
   end
 
   private_constant :Unstable
