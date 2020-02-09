@@ -57,7 +57,7 @@ module CLD3
     # Information about a predicted language.
     # This is an instance of Struct with the following members:
     #
-    # [language]    This is symbol or nil.
+    # [language]    This is symbol.
     #
     # [probability] Language probability. This is Numeric object.
     #
@@ -80,7 +80,7 @@ module CLD3
     # information (e.g., probability). The prediction is based on the first N
     # bytes where N is the minumum between the number of interchange valid UTF8
     # bytes and +max_num_bytes_+. If N is less than +min_num_bytes_+ long, then
-    # this function returns nil as language.
+    # this function returns nil.
     # The argument is a String object.
     # The returned value of this function is an instance of Result.
     def find_language(text)
@@ -105,6 +105,7 @@ module CLD3
 
     def convert_result(result)
       language = result[:language_data].read_bytes(result[:language_size])
+      return nil if language == "und"
 
       cursor = result[:byte_ranges_data]
       byte_ranges = result[:byte_ranges_size].times.map do
@@ -114,7 +115,7 @@ module CLD3
       end
 
       Result.new(
-          language == "und" ? nil : language.to_sym,
+          language.to_sym,
           result[:probability],
           result[:reliable?],
           result[:proportion],

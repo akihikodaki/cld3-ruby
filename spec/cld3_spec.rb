@@ -25,7 +25,7 @@ describe CLD3::NNetLanguageIdentifier do
         described_class
           .new
           .find_language("This text is written in English."))
-      .to eq(CLD3::NNetLanguageIdentifier::Result.new(nil, 0, false, 0, []))
+      .to be_nil
   end
 
   it "can have custom parameters and deals with known language" do
