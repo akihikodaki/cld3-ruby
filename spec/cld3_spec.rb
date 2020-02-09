@@ -38,7 +38,16 @@ describe CLD3::NNetLanguageIdentifier do
 
       context "with an English text" do
         let(:text) { "This text is written in English." }
-        it { is_expected.to eq(CLD3::NNetLanguageIdentifier::Result.new(:en, 0.9996357560157776, true, 1.0, [])) }
+        it {
+          is_expected.to satisfy { |result|
+            result.language == :en &&
+            result.probability > 0 &&
+            result.probability < 1 &&
+            result.reliable? &&
+            result.proportion == 1 &&
+            result.byte_ranges == []
+          }
+        }
       end
     end
 
@@ -48,14 +57,30 @@ describe CLD3::NNetLanguageIdentifier do
       context "with an English text followed by a Russian text" do
         let(:text) { "This piece of text is in English. Този текст е на Български." }
         it {
-          is_expected.to eq([
-            CLD3::NNetLanguageIdentifier::Result.new(:bg, 0.9173890948295593, true, 0.5853658318519592, [
-              CLD3::NNetLanguageIdentifier::SpanInfo.new(34, 81, 0.9173890948295593)
-            ]),
-            CLD3::NNetLanguageIdentifier::Result.new(:en, 0.9999790191650391, true, 0.4146341383457184, [
-              CLD3::NNetLanguageIdentifier::SpanInfo.new(0, 34, 0.9999790191650391)
-            ]),
-          ])
+          is_expected.to satisfy { |results|
+            results.size == 2 &&
+            results[0].language == :bg &&
+            results[0].probability > 0 &&
+            results[0].probability < 1 &&
+            results[0].reliable? &&
+            results[0].proportion > 0 &&
+            results[0].proportion < 1 &&
+            results[0].byte_ranges.size == 1 &&
+            results[0].byte_ranges[0].start_index == 34 &&
+            results[0].byte_ranges[0].end_index == 81 &&
+            results[0].byte_ranges[0].probability == results[0].probability &&
+            results.size == 2 &&
+            results[1].language == :en &&
+            results[1].probability > 0 &&
+            results[1].probability < 1 &&
+            results[1].reliable? &&
+            results[1].proportion > 0 &&
+            results[1].proportion < 1 &&
+            results[1].byte_ranges.size == 1 &&
+            results[1].byte_ranges[0].start_index == 0 &&
+            results[1].byte_ranges[0].end_index == 34 &&
+            results[1].byte_ranges[0].probability == results[1].probability
+          }
         }
       end
     end
