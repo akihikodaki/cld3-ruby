@@ -23,7 +23,7 @@ Gem::Specification.new do |gem|
   gem.homepage = "https://github.com/akihikodaki/cld3-ruby"
   gem.author = "Akihiko Odaki"
   gem.email = "nekomanma@pixiv.co.jp"
-  gem.required_ruby_version = [ ">= 2.3.0", "< 3.1.0" ]
+  gem.required_ruby_version = [ ">= 2.6.0", "< 3.1.0" ]
   gem.add_dependency "ffi", [ ">= 1.1.0", "< 1.14.0" ]
   gem.add_development_dependency "rspec", [ ">=3.0.0", "< 3.11.0" ]
   gem.files = Dir[

@@ -90,6 +90,7 @@ int_path = FileList[
   "README.md",
   "cld3.gemspec",
   "ext/cld3/extconf.rb",
+  "ext/cld3/libcld3.def",
   "ext/cld3/nnet_language_identifier_c.cc",
   "lib/cld3.rb",
   "spec/cld3_spec.rb"

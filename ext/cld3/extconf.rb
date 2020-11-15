@@ -33,7 +33,7 @@ FileUtils.mkdir_p("cld_3/protos")
 FileUtils.mkdir_p("script_span")
 
 [ "feature_extractor", "sentence", "task_spec" ].each {|name|
-  `protoc '#{name}.proto' --cpp_out=.`
+  system "protoc", "#{name}.proto", "--cpp_out=.", exception: true
   ln_fallback("#{name}.pb.h", "cld_3/protos/#{name}.pb.h")
 }
 
@@ -56,4 +56,5 @@ FileUtils.mkdir_p("script_span")
 }
 
 $CXXFLAGS += " -fvisibility=hidden -std=c++11"
+$LIBRUBYARG = ""
 create_makefile("libcld3")
