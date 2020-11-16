@@ -1,4 +1,4 @@
-# Copyright 2017 Akihiko Odaki <akihiko.odaki.4i@stu.hosei.ac.jp>
+# Copyright 2017 Akihiko Odaki <nekomanma@pixiv.co.jp>
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
