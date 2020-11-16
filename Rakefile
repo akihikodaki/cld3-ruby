@@ -128,7 +128,7 @@ task :prepare =>
   rm_f "intermediate/ext/cld3/sentence.pb.h"
   rm_f "intermediate/ext/cld3/task_spec.pb.cc"
   rm_f "intermediate/ext/cld3/task_spec.pb.h"
-  sh "cd intermediate && bundle install --path vendor/bundle"
+  sh "cd intermediate && bundle config set path vendor/bundle && bundle install"
 end
 
 ext_name.each { |name|
