@@ -24,7 +24,7 @@ jobs:
         rake spec
     strategy:
       matrix:
-        ruby: [2.7.2, 2.6.6, 2.5.8, 2.4.10]
+        ruby: [3.0.0-preview1, 2.7.2, 2.6.6, 2.5.8, 2.4.10]
         runner: [macos-10.15, ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
         include:
           - runner: macos-10.15
