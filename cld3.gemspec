@@ -16,7 +16,7 @@
 
 Gem::Specification.new do |gem|
   gem.name = "cld3"
-  gem.version = "3.4.0"
+  gem.version = "3.4.1"
   gem.summary = "Compact Language Detector v3 (CLD3)"
   gem.description = "Compact Language Detector v3 (CLD3) is a neural network model for language identification."
   gem.license = "Apache-2.0"
