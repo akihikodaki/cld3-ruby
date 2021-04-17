@@ -1,7 +1,7 @@
 # File including an implementation of CLD3 module. Some documentations are
 # extracted from ext/cld3/ext/src/nnet_language_identifier.h.
 #
-# Copyright 2017 Akihiko Odaki <nekomanma@pixiv.co.jp>
+# Copyright 2017 Akihiko Odaki <akihiko.odaki@gmail.com>
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

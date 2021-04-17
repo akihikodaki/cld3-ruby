@@ -1,4 +1,4 @@
-# Copyright 2017 Akihiko Odaki <nekomanma@pixiv.co.jp>
+# Copyright 2017 Akihiko Odaki <akihiko.odaki@gmail.com>
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
   gem.license = "Apache-2.0"
   gem.homepage = "https://github.com/akihikodaki/cld3-ruby"
   gem.author = "Akihiko Odaki"
-  gem.email = "nekomanma@pixiv.co.jp"
+  gem.email = "akihiko.odaki@gmail.com"
   gem.required_ruby_version = [ ">= 2.6.0", "< 3.1.0" ]
   gem.add_dependency "ffi", [ ">= 1.1.0", "< 1.15.0" ]
   gem.add_development_dependency "rspec", [ ">=3.0.0", "< 3.11.0" ]
