@@ -24,7 +24,7 @@ Gem::Specification.new do |gem|
   gem.author = "Akihiko Odaki"
   gem.email = "akihiko.odaki@gmail.com"
   gem.required_ruby_version = [ ">= 2.6.0", "< 3.1.0" ]
-  gem.add_dependency "ffi", [ ">= 1.1.0", "< 1.15.0" ]
+  gem.add_dependency "ffi", [ ">= 1.1.0", "< 1.16.0" ]
   gem.add_development_dependency "rspec", [ ">=3.0.0", "< 3.11.0" ]
   gem.files = Dir[
     "Gemfile", "LICENSE", "LICENSE_CLD3", "README.md",
