@@ -31,6 +31,12 @@ put this code into files buildable as a gem. Build a gem with `rake` command.
 
 ### Platform-specific information
 
+#### Apple Silicon (M1)
+```
+brew install pkg-config protobuf
+gem install cld3
+```
+
 #### FreeBSD
 FreeBSD port is available as `rubygem-cld3` in `textproc` category.
 
