@@ -19,6 +19,7 @@
 
 require "ffi"
 require "rbconfig"
+require "cld3/unstable"
 
 # Module providing an interface for Compact Language Detector v3 (CLD3)
 module CLD3
@@ -52,6 +53,7 @@ module CLD3
     # Holds probability that Span, specified by start/end indices, is a given
     # language. The langauge is not stored here; it can be found in Result, which
     # holds an Array of SpanInfo.
+    # @type const SpanInfo: untyped
     SpanInfo = Struct.new(:start_index, :end_index, :probability)
 
     # Information about a predicted language.
@@ -69,6 +71,7 @@ module CLD3
     #
     # [byte_ranges] Specifies the byte ranges in UTF-8 that |language| applies to.
     #               This is an Array of SpanInfo.
+    # @type const Result: untyped
     Result = Struct.new(:language, :probability, :reliable?, :proportion, :byte_ranges)
 
     # The arguments are two String objects.
@@ -115,6 +118,8 @@ module CLD3
     # The second argument is Numeric object.
     # The returned value of this functions is an Array of Result instances.
     def find_top_n_most_freq_langs(text, num_langs)
+      # @type var a: untyped
+
       text_utf8 = text.encode(Encoding::UTF_8)
       pointer = FFI::MemoryPointer.new(:char, text_utf8.bytesize)
 
@@ -123,11 +128,13 @@ module CLD3
 
         results = Unstable.NNetLanguageIdentifier_find_top_n_most_freq_langs(@cc, pointer, text_utf8.bytesize, num_langs)
         begin
-          num_langs.times
+          a = num_langs.times
             .lazy
             .map { |index| convert_result Unstable.refer_to_nth_result(results, index) }
             .take_while { |result| !result.nil? }
             .to_a
+
+          a
         ensure
           Unstable.delete_results results
         end
@@ -162,6 +169,7 @@ module CLD3
   # The model weights are loaded statically.
   module TaskContextParams
     # This is an frozen Array object containing symbols.
+    # @type const LANGUAGE_NAMES: untyped
     LANGUAGE_NAMES = [
       :eo, :co, :eu, :ta, :de, :mt, :ps, :te, :su, :uz, :'zh-Latn', :ne,
       :nl, :sw, :sq, :hmn, :ja, :no, :mn, :so, :ko, :kk, :sl, :ig,
@@ -175,44 +183,4 @@ module CLD3
       :sn, :yo, :pa, :ku,
     ].freeze
   end
-
-  module Unstable
-    extend FFI::Library
-
-    ffi_lib File.join(__dir__, "..", "ext", "cld3", "libcld3." + RbConfig::CONFIG["DLEXT"])
-
-    module NNetLanguageIdentifier
-      class Pointer < FFI::AutoPointer
-        def self.release(pointer)
-          Unstable.delete_NNetLanguageIdentifier(pointer)
-        end
-      end
-
-      class SpanInfo < FFI::Struct
-        layout :start_index, :int, :end_index, :int, :probability, :float
-      end
-
-      class Result < FFI::Struct
-        layout :language_data, :pointer, :language_size, :size_t, :byte_ranges_data, :pointer, :byte_ranges_size, :size_t, :probability, :float, :proportion, :float, :reliable?, :bool
-      end
-    end
-
-    attach_function :delete_NNetLanguageIdentifier, [ :pointer ], :void
-
-    attach_function :delete_result, [ :pointer ], :void
-
-    attach_function :delete_results, [ :pointer ], :void
-
-    attach_function :new_NNetLanguageIdentifier, [ :int, :int ], :pointer
-
-    attach_function :refer_to_nth_result, [ :pointer, :size_t ], NNetLanguageIdentifier::Result.by_value
-
-    attach_function :NNetLanguageIdentifier_find_language,
-        [ :pointer, :buffer_in, :size_t ], :pointer
-
-    attach_function :NNetLanguageIdentifier_find_top_n_most_freq_langs,
-        [ :pointer, :buffer_in, :size_t, :int ], :pointer
-  end
-
-  private_constant :Unstable
 end

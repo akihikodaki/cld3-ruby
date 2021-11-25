@@ -17,6 +17,7 @@
 require "bundler/setup"
 Bundler.setup
 
+require "rbs/test/setup"
 require "cld3"
 
 describe CLD3::NNetLanguageIdentifier do

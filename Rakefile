@@ -18,6 +18,8 @@ require "rake/clean"
 require "rubygems"
 require "rubygems/package"
 
+ENV["RBS_TEST_TARGET"] = "CLD3::*"
+
 # Copied from ext/cld3/ext/src/BUILD.gn
 ext_name = FileList[
   "feature_extractor.proto",
@@ -88,11 +90,14 @@ int_path = FileList[
   "Gemfile",
   "LICENSE",
   "README.md",
+  "Steepfile",
   "cld3.gemspec",
   "ext/cld3/extconf.rb",
   "ext/cld3/libcld3.def",
   "ext/cld3/nnet_language_identifier_c.cc",
+  "lib/cld3/unstable.rb",
   "lib/cld3.rb",
+  "sig/cld3.rbs",
   "spec/cld3_spec.rb"
 ]
 
@@ -106,6 +111,11 @@ desc "Run the tests"
 task "spec" => "intermediate/ext/cld3/Makefile" do
   sh "make -C intermediate/ext/cld3"
   sh "cd intermediate && bundle exec rspec"
+end
+
+desc "Run Steep"
+task "steep" => :prepare do
+  sh "cd intermediate && bundle exec steep check"
 end
 
 file "intermediate/ext/cld3/Makefile" => :prepare do
