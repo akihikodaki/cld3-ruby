@@ -74,14 +74,14 @@ module CLD3
     # @type const Result: untyped
     Result = Struct.new(:language, :probability, :reliable?, :proportion, :byte_ranges)
 
-    # The arguments are two String objects.
+    # The arguments are two Numeric objects.
     def initialize(min_num_bytes = MIN_NUM_BYTES_TO_CONSIDER, max_num_bytes = MAX_NUM_BYTES_TO_CONSIDER)
       @cc = Unstable::NNetLanguageIdentifier::Pointer.new(Unstable.new_NNetLanguageIdentifier(min_num_bytes, max_num_bytes))
     end
 
     # Finds the most likely language for the given text, along with additional
     # information (e.g., probability). The prediction is based on the first N
-    # bytes where N is the minumum between the number of interchange valid UTF8
+    # bytes where N is the minimum between the number of interchange valid UTF8
     # bytes and +max_num_bytes_+. If N is less than +min_num_bytes_+ long, then
     # this function returns nil.
     # The argument is a String object.
