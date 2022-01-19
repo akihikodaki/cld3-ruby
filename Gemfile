@@ -15,4 +15,5 @@
 #==============================================================================
 
 source 'https://rubygems.org'
+gem 'steep', github: 'akihikodaki/steep', branch: 'cld3'
 gemspec

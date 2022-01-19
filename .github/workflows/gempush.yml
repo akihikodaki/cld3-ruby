@@ -12,6 +12,8 @@ jobs:
   spec:
     name: Spec
     runs-on: ${{ matrix.runner }}
+    # Cannot run steep check against Windows environment #383
+    # https://github.com/soutaro/steep/issues/383
     steps:
     - uses: actions/checkout@v2
       with:
@@ -19,41 +21,29 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - run: ${{ matrix.command }}
+    - if: ${{ runner.os == 'Linux' }}
+      run: |
+        sudo apt-get install libprotobuf-dev protobuf-compiler
+        rake spec steep
+    - if: ${{ runner.os == 'Windows' && matrix.ruby == '3.1.0' }}
+      run: |
+        pacman -S --noconfirm mingw-w64-ucrt-x86_64-protobuf
+        rake spec
+    - if: ${{ runner.os == 'Windows' && matrix.ruby != '3.1.0' }}
+      run: |
+        pacman -S --noconfirm mingw-w64-x86_64-protobuf
+        rake spec
+    - if: ${{ runner.os == 'macOS' }}
+      run: |
+        brew update
+        brew install protobuf
+        rake spec steep
     strategy:
       matrix:
-        ruby: [3.1.0-preview1, 3.0.3, 3.0.2, 2.7.5, 2.7.4, 2.6.9, 2.6.8]
+        ruby: [3.1.0, 3.0.3, 2.7.5, 2.6.9]
         runner:
           - macos-11
           - ubuntu-18.04
           - ubuntu-20.04
           - windows-2019
-        exclude:
-          - ruby: 3.1.0-preview1
-            runner: windows-2019
-          - ruby: 3.0.3
-            runner: windows-2019
-          - ruby: 2.7.5
-            runner: windows-2019
-          - ruby: 2.6.9
-            runner: windows-2019
-        include:
-          - runner: macos-11
-            command: |
-              brew update
-              brew install protobuf
-              rake spec steep
-          - runner: ubuntu-18.04
-            command: |
-              sudo apt-get install libprotobuf-dev protobuf-compiler
-              rake spec steep
-          - runner: ubuntu-20.04
-            command: |
-              sudo apt-get install libprotobuf-dev protobuf-compiler
-              rake spec steep
-          - runner: windows-2019
-            # Cannot run steep check against Windows environment #383
-            # https://github.com/soutaro/steep/issues/383
-            command: |
-              pacman -S --noconfirm mingw-w64-x86_64-protobuf
-              rake spec
+          - windows-2022

@@ -27,7 +27,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "ffi", [ ">= 1.1.0", "< 1.16.0" ]
   gem.add_development_dependency "rbs", [ ">= 1.7.0", "< 1.8.0" ]
   gem.add_development_dependency "rspec", [ ">=3.0.0", "< 3.11.0" ]
-  gem.add_development_dependency "steep", [ ">= 0.46.0", "< 0.47.0" ]
+  gem.add_development_dependency "steep", [ ">= 0.47.0", "< 0.48.0" ]
   gem.files = Dir[
     "Gemfile", "LICENSE", "LICENSE_CLD3", "README.md",
     "cld3.gemspec", "ext/**/*", "lib/**/*", "sig/**/*"
