@@ -42,17 +42,17 @@ change:
 https://github.com/jruby/jruby/pull/4118/commits/edad375ef4dcf195b19ce0afe4befac66468c736
 
 ### Troubleshooting
-`gem install cld3` triggers native library building. If it fails, you are likely
-to missing required facilities. Make sure C++ compiler and protocol buffers
-is installed. I recommend [GCC](https://gcc.gnu.org/) as a C++ compiler. Ruby is
-likely to need [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
+`gem install cld3` triggers native library building. If it fails, it is likely
+that some required facilities are missing. Make sure C++ compiler is installed.
+I recommend [GCC](https://gcc.gnu.org/) as a C++ compiler.
+Ruby is likely to need [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
 as well.
 
 Runtime errors are likely to be issues of [FFI](https://github.com/ffi/ffi) or
 programming errors. Make sure they are all correct.
 
 If you cannot identify the cause of your problem, run spec of this library and
-see whether the problem is reproducable with it or not. Spec is not included in
+see whether the problem is reproducible with it or not. Spec is not included in
 the gem, so clone the source code repository and then run `rake spec`.
 The source code repository is at
 https://github.com/akihikodaki/cld3-ruby.
