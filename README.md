@@ -19,7 +19,6 @@ cld3.find_language("здравствуйте") # => #<struct Struct::Result lang
 ### Prerequisites
 * [Bundler](http://bundler.io/)
 * C++ compiler
-* [Protocol buffers](https://developers.google.com/protocol-buffers/)
 * [Rake](https://ruby.github.io/rake/)
 * [RubyGems](https://rubygems.org/)
 

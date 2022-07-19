@@ -22,9 +22,6 @@ ENV["RBS_TEST_TARGET"] = "CLD3::*"
 
 # Copied from ext/cld3/ext/src/BUILD.gn
 ext_name = FileList[
-  "feature_extractor.proto",
-  "sentence.proto",
-  "task_spec.proto",
   "base.cc",
   "base.h",
   "casts.h",
@@ -92,6 +89,9 @@ int_path = FileList[
   "README.md",
   "Steepfile",
   "cld3.gemspec",
+  "ext/cld3/cld_3/protos/feature_extractor.pb.h",
+  "ext/cld3/cld_3/protos/sentence.pb.h",
+  "ext/cld3/cld_3/protos/task_spec.pb.h",
   "ext/cld3/extconf.rb",
   "ext/cld3/libcld3.def",
   "ext/cld3/nnet_language_identifier_c.cc",
@@ -131,14 +131,7 @@ end
 desc "Prepare files for building gem and testing in intermediate directory"
 task :prepare =>
     ext_intermediate + int_intermediate << "intermediate/LICENSE_CLD3" do
-  rm_rf "intermediate/ext/cld3/cld_3/protos"
   rm_rf "intermediate/ext/cld3/script_span"
-  rm_f "intermediate/ext/cld3/feature_extractor.pb.cc"
-  rm_f "intermediate/ext/cld3/feature_extractor.pb.h"
-  rm_f "intermediate/ext/cld3/sentence.pb.cc"
-  rm_f "intermediate/ext/cld3/sentence.pb.h"
-  rm_f "intermediate/ext/cld3/task_spec.pb.cc"
-  rm_f "intermediate/ext/cld3/task_spec.pb.h"
   sh "cd intermediate && bundle config path vendor/bundle && bundle install"
 end
 

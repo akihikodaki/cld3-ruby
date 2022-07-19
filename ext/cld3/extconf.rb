@@ -26,16 +26,7 @@ rescue
   end
 end
 
-# Check pkg-config first to inform the library is missing if so.
-pkg_config("protobuf") or abort "Failed to locate protobuf"
-
-FileUtils.mkdir_p("cld_3/protos")
 FileUtils.mkdir_p("script_span")
-
-[ "feature_extractor", "sentence", "task_spec" ].each {|name|
-  system "protoc", "#{name}.proto", "--cpp_out=.", exception: true
-  ln_fallback("#{name}.pb.h", "cld_3/protos/#{name}.pb.h")
-}
 
 [
   "fixunicodevalue.h",
@@ -55,6 +46,6 @@ FileUtils.mkdir_p("script_span")
   ln_fallback("#{name}", "script_span/#{name}")
 }
 
-$CXXFLAGS += " -fvisibility=hidden -std=c++11"
+$CXXFLAGS += " -fvisibility=hidden -std=c++17"
 $LIBRUBYARG = ""
 create_makefile("libcld3")
