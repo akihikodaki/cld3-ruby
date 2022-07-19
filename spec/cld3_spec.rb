@@ -21,6 +21,27 @@ require "rbs/test/setup"
 require "cld3"
 
 describe CLD3::NNetLanguageIdentifier do
+  let(:min_num_bytes) { 0 }
+  let(:max_num_bytes) { 1000 }
+
+  context "with negative min_num_bytes" do
+    let(:min_num_bytes) { -1 }
+
+    describe "#initialize" do
+      subject { ->{ described_class.new(min_num_bytes, max_num_bytes) } }
+      it { is_expected.to raise_error(ArgumentError) }
+    end
+  end
+
+  context "with min_num_bytes <= max_num_bytes" do
+    let(:max_num_bytes) { 0 }
+
+    describe "#initialize" do
+      subject { ->{ described_class.new(min_num_bytes, max_num_bytes) } }
+      it { is_expected.to raise_error(ArgumentError) }
+    end
+  end
+
   context "initialized without parameters" do
     let(:lang_id) { described_class.new }
 
@@ -32,7 +53,7 @@ describe CLD3::NNetLanguageIdentifier do
 
   # See ext/cld3/ext/src/language_identifier_main.cc
   context "initialized with custom parameters" do
-    let(:lang_id) { described_class.new(0, 1000) }
+    let(:lang_id) { described_class.new(min_num_bytes, max_num_bytes) }
 
     describe "#find_language" do
       subject { lang_id.find_language text }
