@@ -16,6 +16,5 @@
 
 target :lib do
   signature "sig"
-  check "cld3.gemspec"
   check "lib/cld3.rb"
 end

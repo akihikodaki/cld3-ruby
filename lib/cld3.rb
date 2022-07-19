@@ -88,6 +88,8 @@ module CLD3
     # The argument is a String object.
     # The returned value of this function is an instance of Result.
     def find_language(text)
+      # @type const FFI: untyped
+
       text_utf8 = text.encode(Encoding::UTF_8)
       pointer = FFI::MemoryPointer.new(:char, text_utf8.bytesize)
 
@@ -119,6 +121,7 @@ module CLD3
     # The second argument is Numeric object.
     # The returned value of this functions is an Array of Result instances.
     def find_top_n_most_freq_langs(text, num_langs)
+      # @type const FFI: untyped
       # @type var a: untyped
 
       text_utf8 = text.encode(Encoding::UTF_8)

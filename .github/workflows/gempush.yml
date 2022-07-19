@@ -12,8 +12,6 @@ jobs:
   spec:
     name: Spec
     runs-on: ${{ matrix.runner }}
-    # Cannot run steep check against Windows environment #383
-    # https://github.com/soutaro/steep/issues/383
     steps:
     - uses: actions/checkout@v2
       with:
@@ -21,29 +19,18 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - if: ${{ runner.os == 'Linux' }}
-      run: |
-        sudo apt-get install libprotobuf-dev protobuf-compiler
-        rake spec steep
-    - if: ${{ runner.os == 'Windows' && matrix.ruby == '3.1.0' }}
-      run: |
-        pacman -S --noconfirm mingw-w64-ucrt-x86_64-protobuf
-        rake spec
-    - if: ${{ runner.os == 'Windows' && matrix.ruby != '3.1.0' }}
-      run: |
-        pacman -S --noconfirm mingw-w64-x86_64-protobuf
-        rake spec
-    - if: ${{ runner.os == 'macOS' }}
-      run: |
-        brew update
-        brew install protobuf
-        rake spec steep
+    - run: rake spec steep
     strategy:
       matrix:
-        ruby: [3.1.0, 3.0.3, 2.7.5, 2.6.9]
+        ruby: [3.2.0-preview1, 3.1.2, 3.0.4, 2.7.6]
         runner:
           - macos-11
           - ubuntu-18.04
           - ubuntu-20.04
           - windows-2019
           - windows-2022
+        exclude:
+          - ruby: 3.2.0-preview1
+            runner: windows-2019
+          - ruby: 3.2.0-preview1
+            runner: windows-2022
