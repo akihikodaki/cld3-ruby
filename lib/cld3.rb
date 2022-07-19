@@ -76,7 +76,7 @@ module CLD3
 
     # The arguments are two Numeric objects.
     def initialize(min_num_bytes = MIN_NUM_BYTES_TO_CONSIDER, max_num_bytes = MAX_NUM_BYTES_TO_CONSIDER)
-      raise ArgumentError if max_num_bytes <= 0 || min_num_bytes < 0 || min_num_bytes >= max_num_bytes
+      raise ArgumentError if min_num_bytes < 0 || min_num_bytes >= max_num_bytes
       @cc = Unstable::NNetLanguageIdentifier::Pointer.new(Unstable.new_NNetLanguageIdentifier(min_num_bytes, max_num_bytes))
     end
 
