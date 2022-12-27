@@ -110,6 +110,7 @@ task :default => :package
 desc "Run the tests"
 task "spec" => "intermediate/ext/cld3/Makefile" do
   sh "make -C intermediate/ext/cld3"
+  sh "install intermediate/ext/cld3/libcld3.#{RbConfig::CONFIG["DLEXT"]} intermediate/lib/libcld3.#{RbConfig::CONFIG["DLEXT"]}"
   sh "cd intermediate && bundle exec rspec"
 end
 
