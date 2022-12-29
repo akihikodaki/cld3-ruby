@@ -36,6 +36,8 @@ module CLD3
       attr_accessor byte_ranges(): Array[SpanInfo]
     end
 
+    @cc: untyped
+
     def initialize: (?Integer, ?Integer) -> void
     def find_language: (String) -> Result?
     def find_top_n_most_freq_langs: (String, Integer) -> Array[Result]
