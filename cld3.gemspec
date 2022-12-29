@@ -29,7 +29,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "steep", [ ">= 1.0.0", "< 1.1.0" ]
   gem.files = Dir[
     "Gemfile", "LICENSE", "LICENSE_CLD3", "README.md",
-    "cld3.gemspec", "ext/**/*", "lib/**/*", "sig/**/*"
+    "cld3.gemspec", "ext/**/*.c", "ext/**/*.cc", "ext/**/*.h",
+    "lib/**/*.rb", "sig/**/*"
   ]
   gem.require_paths = [ "lib" ]
   gem.extensions = [ "ext/cld3/extconf.rb" ]
