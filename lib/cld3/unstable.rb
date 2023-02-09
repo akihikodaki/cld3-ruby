@@ -19,7 +19,7 @@ module CLD3
   module Unstable
     extend FFI::Library
 
-    ffi_lib File.join(__dir__, "..", "..", "ext", "cld3", "libcld3." + RbConfig::CONFIG["DLEXT"])
+    ffi_lib File.join(__dir__, "..", "libcld3." + RbConfig::CONFIG["DLEXT"])
 
     module NNetLanguageIdentifier
       class Pointer < FFI::AutoPointer

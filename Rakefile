@@ -109,7 +109,7 @@ task :default => :package
 
 desc "Run the tests"
 task "spec" => "intermediate/ext/cld3/Makefile" do
-  sh "make -C intermediate/ext/cld3"
+  sh "make -C intermediate/ext/cld3 install sitearchdir=../../lib sitelibdir=../../lib"
   sh "cd intermediate && bundle exec rspec"
 end
 
