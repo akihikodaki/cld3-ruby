@@ -35,18 +35,10 @@ FreeBSD port is available as `rubygem-cld3` in `textproc` category.
 
 https://svnweb.freebsd.org/ports/head/textproc/rubygem-cld3/
 
-#### JRuby
-JRuby has a bug which prevents the feature detection. Apply the following
-change:
-https://github.com/jruby/jruby/pull/4118/commits/edad375ef4dcf195b19ce0afe4befac66468c736
-
 ### Troubleshooting
 `gem install cld3` triggers native library building. If it fails, it is likely
 that some required facilities are missing. Make sure C++ compiler is installed.
 I recommend [GCC](https://gcc.gnu.org/) as a C++ compiler.
-
-Runtime errors are likely to be issues of [FFI](https://github.com/ffi/ffi) or
-programming errors. Make sure they are all correct.
 
 If you cannot identify the cause of your problem, run spec of this library and
 see whether the problem is reproducible with it or not. Spec is not included in

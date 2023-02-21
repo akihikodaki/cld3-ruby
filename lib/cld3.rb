@@ -17,39 +17,10 @@
 # limitations under the License.
 # ==============================================================================
 
-require "ffi"
-require "rbconfig"
-require "cld3/unstable"
-
 # Module providing an interface for Compact Language Detector v3 (CLD3)
 module CLD3
   # Class for detecting the language of a document.
   class NNetLanguageIdentifier
-    # Min number of bytes needed to make a prediction if the construcotr is
-    # called without the corresponding parameter.
-    # This is Numeric object.
-    MIN_NUM_BYTES_TO_CONSIDER = 140
-
-    # Max number of bytes needed to make a prediction if the construcotr is
-    # called without the corresponding parameter.
-    # This is Numeric object.
-    MAX_NUM_BYTES_TO_CONSIDER = 700
-
-    # Max number of input bytes to process.
-    # This is Numeric object.
-    MAX_NUM_INPUT_BYTES_TO_CONSIDER = 10000
-
-    # Predictions with probability greater than or equal to this threshold are
-    # marked as reliable. This threshold was optimized on a set of text segments
-    # extracted from wikipedia, and results in an overall precision, recall,
-    # and f1 equal to 0.9760, 0.9624, and 0.9692, respectively.
-    # This is Numeric object.
-    RELIABILITY_THRESHOLD = 0.7
-
-    # Reliability threshold for the languages hr and bs.
-    # This is Numeric object.
-    RELIABILITY_HR_BS_THRESHOLD = 0.5
-
     # Holds probability that Span, specified by start/end indices, is a given
     # language. The langauge is not stored here; it can be found in Result, which
     # holds an Array of SpanInfo.
@@ -76,8 +47,10 @@ module CLD3
 
     # The arguments are two Numeric objects.
     def initialize(min_num_bytes = MIN_NUM_BYTES_TO_CONSIDER, max_num_bytes = MAX_NUM_BYTES_TO_CONSIDER)
+      min_num_bytes = min_num_bytes.ceil
+      max_num_bytes = max_num_bytes.floor
       raise ArgumentError if min_num_bytes < 0 || min_num_bytes >= max_num_bytes
-      @cc = Unstable::NNetLanguageIdentifier::Pointer.new(Unstable.new_NNetLanguageIdentifier(min_num_bytes, max_num_bytes))
+      @cc = Unstable.make(min_num_bytes, max_num_bytes)
     end
 
     # Finds the most likely language for the given text, along with additional
@@ -88,23 +61,7 @@ module CLD3
     # The argument is a String object.
     # The returned value of this function is an instance of Result.
     def find_language(text)
-      # @type const FFI: untyped
-
-      text_utf8 = text.encode(Encoding::UTF_8)
-      pointer = FFI::MemoryPointer.new(:char, text_utf8.bytesize)
-
-      begin
-        pointer.put_bytes(0, text_utf8)
-
-        result = Unstable.NNetLanguageIdentifier_find_language(@cc, pointer, text_utf8.bytesize)
-        begin
-          convert_result Unstable::NNetLanguageIdentifier::Result.new(result)
-        ensure
-          Unstable.delete_result result
-        end
-      ensure
-        pointer.free
-      end
+      @cc.find_language(Result, SpanInfo, text.encode(Encoding::UTF_8))
     end
 
     # Splits the input text (up to the first byte, if any, that is not
@@ -121,52 +78,15 @@ module CLD3
     # The second argument is Numeric object.
     # The returned value of this functions is an Array of Result instances.
     def find_top_n_most_freq_langs(text, num_langs)
-      # @type const FFI: untyped
-      # @type var a: untyped
-
-      text_utf8 = text.encode(Encoding::UTF_8)
-      pointer = FFI::MemoryPointer.new(:char, text_utf8.bytesize)
-
-      begin
-        pointer.put_bytes(0, text_utf8)
-
-        results = Unstable.NNetLanguageIdentifier_find_top_n_most_freq_langs(@cc, pointer, text_utf8.bytesize, num_langs)
-        begin
-          a = num_langs.times
-            .lazy
-            .map { |index| convert_result Unstable.refer_to_nth_result(results, index) }
-            .take_while { |result| !result.nil? }
-            .to_a
-
-          a
-        ensure
-          Unstable.delete_results results
-        end
-      ensure
-        pointer.free
-      end
+      @cc.find_top_n_most_freq_langs(Result, SpanInfo,
+                                     text.encode(Encoding::UTF_8),
+                                     num_langs)
     end
 
-    private
-
-    def convert_result(result)
-      language = result[:language_data].read_bytes(result[:language_size])
-      return nil if language == "und"
-
-      cursor = result[:byte_ranges_data]
-      byte_ranges = result[:byte_ranges_size].times.map do
-        info = Unstable::NNetLanguageIdentifier::SpanInfo.new(cursor)
-        cursor += Unstable::NNetLanguageIdentifier::SpanInfo.size
-        SpanInfo.new(info[:start_index], info[:end_index], info[:probability])
-      end
-
-      Result.new(
-          language.to_sym,
-          result[:probability],
-          result[:reliable?],
-          result[:proportion],
-          byte_ranges)
+    class Unstable
     end
+  
+    private_constant :Unstable
   end
 
   # Encapsulates the TaskContext specifying only the parameters for the model.
@@ -174,17 +94,9 @@ module CLD3
   module TaskContextParams
     # This is an frozen Array object containing symbols.
     # @type const LANGUAGE_NAMES: untyped
-    LANGUAGE_NAMES = [
-      :eo, :co, :eu, :ta, :de, :mt, :ps, :te, :su, :uz, :'zh-Latn', :ne,
-      :nl, :sw, :sq, :hmn, :ja, :no, :mn, :so, :ko, :kk, :sl, :ig,
-      :mr, :th, :zu, :ml, :hr, :bs, :lo, :sd, :cy, :hy, :uk, :pt,
-      :lv, :iw, :cs, :vi, :jv, :be, :km, :mk, :tr, :fy, :am, :zh,
-      :da, :sv, :fi, :ht, :af, :la, :id, :fil, :sm, :ca, :el, :ka,
-      :sr, :it, :sk, :ru, :'ru-Latn', :bg, :ny, :fa, :haw, :gl, :et,
-      :ms, :gd, :'bg-Latn', :ha, :is, :ur, :mi, :hi, :bn, :'hi-Latn', :fr,
-      :yi, :hu, :xh, :my, :tg, :ro, :ar, :lb, :'el-Latn', :st, :ceb,
-      :kn, :az, :si, :ky, :mg, :en, :gu, :es, :pl, :'ja-Latn', :ga, :lt,
-      :sn, :yo, :pa, :ku,
-    ].freeze
+    LANGUAGE_NAMES = []
   end
 end
+
+require "cld3_ext"
+CLD3::TaskContextParams::LANGUAGE_NAMES.freeze

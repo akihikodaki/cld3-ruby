@@ -47,5 +47,4 @@ FileUtils.mkdir_p("script_span")
 }
 
 $CXXFLAGS += " -fvisibility=hidden -std=c++17"
-$LIBRUBYARG = ""
-create_makefile("libcld3")
+create_makefile("cld3_ext")

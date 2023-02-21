@@ -93,9 +93,8 @@ int_path = FileList[
   "ext/cld3/cld_3/protos/sentence.pb.h",
   "ext/cld3/cld_3/protos/task_spec.pb.h",
   "ext/cld3/extconf.rb",
-  "ext/cld3/libcld3.def",
+  "ext/cld3/cld3_ext.def",
   "ext/cld3/nnet_language_identifier_c.cc",
-  "lib/cld3/unstable.rb",
   "lib/cld3.rb",
   "sig/cld3.rbs",
   "spec/cld3_spec.rb"
@@ -109,7 +108,7 @@ task :default => :package
 
 desc "Run the tests"
 task "spec" => "intermediate/ext/cld3/Makefile" do
-  sh "make -C intermediate/ext/cld3"
+  sh "make -C intermediate/ext/cld3 install sitearchdir=../../lib sitelibdir=../../lib"
   sh "cd intermediate && bundle exec rspec"
 end
 

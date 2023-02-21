@@ -1,8 +1,0 @@
-EXPORTS
-  NNetLanguageIdentifier_find_language
-  NNetLanguageIdentifier_find_top_n_most_freq_langs
-  delete_NNetLanguageIdentifier
-  delete_result
-  delete_results
-  new_NNetLanguageIdentifier
-  refer_to_nth_result
