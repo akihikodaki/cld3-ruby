@@ -192,6 +192,7 @@ extern "C" EXPORT void Init_cld3_ext() {
   rb_define_const(identifier, "RELIABILITY_HR_BS_THRESHOLD",
                   DBL2NUM(chrome_lang_id::NNetLanguageIdentifier::kReliabilityHrBsThreshold));
 
+  rb_undef_alloc_func(unstable);
   rb_define_singleton_method(unstable, "make", make, 2);
   rb_define_method(unstable, "find_language", find_language, 3);
   rb_define_method(unstable, "find_top_n_most_freq_langs",
