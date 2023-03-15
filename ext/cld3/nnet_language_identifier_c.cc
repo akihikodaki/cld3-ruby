@@ -101,12 +101,8 @@ static size_t dsize(const void *data) {
 }
 
 static const rb_data_type_t data_type = {
-  .wrap_struct_name = "CLD3::NNetLanguageIdentifier",
-  .function = {
-    .dfree = dfree,
-    .dsize = dsize,
-  },
-  .flags = RUBY_TYPED_FREE_IMMEDIATELY
+  "CLD3::NNetLanguageIdentifier", { nullptr, dfree, dsize }, nullptr, nullptr,
+  RUBY_TYPED_FREE_IMMEDIATELY
 };
 
 static VALUE find_language(VALUE obj,
