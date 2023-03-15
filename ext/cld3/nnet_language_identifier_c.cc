@@ -24,7 +24,7 @@ limitations under the License.
 #if defined _WIN32 || defined __CYGWIN__
   #define EXPORT __declspec(dllexport)
 #else
-  #define EXPORT __attribute__ ((visibility ("default")))
+  #define EXPORT __attribute__((visibility("default")))
 #endif
 
 struct Result {
@@ -84,10 +84,9 @@ struct ResultVector {
 };
 
 template<typename T>
-VALUE convert_protected(VALUE arg)
-{
-    auto result = reinterpret_cast<const T *>(arg);
-    return result->convert();
+VALUE convert_protected(VALUE arg) {
+  auto result = reinterpret_cast<const T *>(arg);
+  return result->convert();
 }
 
 static void dfree(void *arg) {
