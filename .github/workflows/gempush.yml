@@ -28,7 +28,12 @@ jobs:
     # manually update it to 0.2.1.
     - run: gem install --default pathname:0.2.1
 
-    - run: bundle exec rake spec steep
+    - run: bundle exec rake package spec steep
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.ruby }}-${{ matrix.runner }}
+        path: intermediate/*.gem
     strategy:
       matrix:
         ruby: [3.2.1, 3.1.3, 3.0.5, 2.7.7]
