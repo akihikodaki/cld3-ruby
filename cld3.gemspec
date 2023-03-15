@@ -28,7 +28,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rspec", "~> 3.12.0"
   gem.add_development_dependency "steep", "~> 1.3.0"
   gem.files = Dir[
-    "Gemfile", "LICENSE", "LICENSE_CLD3", "README.md", "Steepfile",
+    "LICENSE", "LICENSE_CLD3", "README.md", "Steepfile",
     "cld3.gemspec", "ext/**/*.c", "ext/**/*.cc", "ext/**/*.h",
     "lib/**/*.rb", "sig/**/*.rbs", "spec/**/*.rb"
   ]

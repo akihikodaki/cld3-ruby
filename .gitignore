@@ -1,1 +1,3 @@
-intermediate
+/.bundle
+/Gemfile.lock
+/intermediate

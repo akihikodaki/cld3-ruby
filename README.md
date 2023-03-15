@@ -19,14 +19,14 @@ cld3.find_language("здравствуйте") # => #<struct Struct::Result lang
 ### Prerequisites
 * [Bundler](http://bundler.io/)
 * C++ compiler
-* [Rake](https://ruby.github.io/rake/)
 * [RubyGems](https://rubygems.org/)
 
 ### Instructions
 I (Akihiko Odaki) recommend to setup this library installing via `gem`.
 
 You can also build this library by yourself. `Rakefile` includes a Rake task to
-put this code into files buildable as a gem. Build a gem with `rake` command.
+put this code into files buildable as a gem. Build a gem with `bundle exec rake`
+command.
 
 ### Platform-specific information
 
@@ -42,7 +42,8 @@ I recommend [GCC](https://gcc.gnu.org/) as a C++ compiler.
 
 If you cannot identify the cause of your problem, run spec of this library and
 see whether the problem is reproducible with it or not. Spec is not included in
-the gem, so clone the source code repository and then run `rake spec`.
+the gem, so clone the source code repository and then run
+`bundle exec rake spec`.
 The source code repository is at
 https://github.com/akihikodaki/cld3-ruby.
 

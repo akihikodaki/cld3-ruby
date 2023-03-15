@@ -109,12 +109,12 @@ task :default => :package
 desc "Run the tests"
 task "spec" => "intermediate/ext/cld3/Makefile" do
   sh "make -C intermediate/ext/cld3 install sitearchdir=../../lib sitelibdir=../../lib"
-  sh "cd intermediate && bundle exec rspec"
+  sh "cd intermediate && rspec"
 end
 
 desc "Run Steep"
 task "steep" => :prepare do
-  sh "cd intermediate && bundle exec steep check"
+  sh "cd intermediate && steep check"
 end
 
 file "intermediate/ext/cld3/Makefile" => :prepare do
@@ -131,7 +131,6 @@ desc "Prepare files for building gem and testing in intermediate directory"
 task :prepare =>
     ext_intermediate + int_intermediate << "intermediate/LICENSE_CLD3" do
   rm_rf "intermediate/ext/cld3/script_span"
-  sh "cd intermediate && bundle config path vendor/bundle && bundle install"
 end
 
 ext_name.each { |name|
