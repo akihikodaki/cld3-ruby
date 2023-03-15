@@ -20,6 +20,14 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
+
+    # In a Ruby process, only a version of a gem can be activated. As Bundler
+    # activates the default version of pathname, Bundler checks if the version
+    # meets the requirement specified in Gemfile. Currently, steep requires
+    # pathname >=0.2.1 but Ruby ships with an older version of pathname so
+    # manually update it to 0.2.1.
+    - run: gem install --default pathname:0.2.1
+
     - run: bundle exec rake spec steep
     strategy:
       matrix:
