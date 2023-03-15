@@ -24,9 +24,9 @@ Gem::Specification.new do |gem|
   gem.author = "Akihiko Odaki"
   gem.email = "akihiko.odaki@gmail.com"
   gem.required_ruby_version = [ ">= 2.7.0", "< 3.3.0" ]
-  gem.add_development_dependency "rbs", [ ">= 2.8.0", "< 2.9.0" ]
-  gem.add_development_dependency "rspec", [ ">= 3.12.0", "< 3.13.0" ]
-  gem.add_development_dependency "steep", [ ">= 1.3.0", "< 1.4.0" ]
+  gem.add_development_dependency "rbs", "~> 2.8.0"
+  gem.add_development_dependency "rspec", "~> 3.12.0"
+  gem.add_development_dependency "steep", "~> 1.3.0"
   gem.files = Dir[
     "Gemfile", "LICENSE", "LICENSE_CLD3", "README.md",
     "cld3.gemspec", "ext/**/*.c", "ext/**/*.cc", "ext/**/*.h",
