@@ -36,6 +36,7 @@ module CLD3
       attr_accessor byte_ranges(): Array[SpanInfo]
     end
 
+    Unstable: untyped
     @cc: untyped
 
     def initialize: (?Integer, ?Integer) -> void
@@ -62,6 +63,4 @@ module CLD3
 
     LANGUAGE_NAMES: Array[language_names]
   end
-
-  Unstable: untyped
 end
