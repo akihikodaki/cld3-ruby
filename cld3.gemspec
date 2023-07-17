@@ -23,10 +23,10 @@ Gem::Specification.new do |gem|
   gem.homepage = "https://github.com/akihikodaki/cld3-ruby"
   gem.author = "Akihiko Odaki"
   gem.email = "akihiko.odaki@gmail.com"
-  gem.required_ruby_version = [ ">= 2.7.0", "< 3.3.0" ]
-  gem.add_development_dependency "rbs", "~> 2.8.0"
+  gem.required_ruby_version = [ ">= 3.0.0", "< 3.4.0" ]
+  gem.add_development_dependency "rbs", "~> 3.1.0"
   gem.add_development_dependency "rspec", "~> 3.12.0"
-  gem.add_development_dependency "steep", "~> 1.3.0"
+  gem.add_development_dependency "steep", "~> 1.5.0"
   gem.files = Dir[
     "LICENSE", "LICENSE_CLD3", "README.md", "Steepfile",
     "cld3.gemspec", "ext/**/*.c", "ext/**/*.cc", "ext/**/*.h",

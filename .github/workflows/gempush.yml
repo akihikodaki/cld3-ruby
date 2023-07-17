@@ -13,30 +13,23 @@ jobs:
     name: Spec
     runs-on: ${{ matrix.runner }}
     steps:
-    - uses: actions/checkout@v3.3.0
+    - uses: actions/checkout@v3.5.3
       with:
         submodules: true
-    - uses: ruby/setup-ruby@v1.138.0
+    - uses: ruby/setup-ruby@v1.152.0
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
 
-    # In a Ruby process, only a version of a gem can be activated. As Bundler
-    # activates the default version of pathname, Bundler checks if the version
-    # meets the requirement specified in Gemfile. Currently, steep requires
-    # pathname >=0.2.1 but Ruby ships with an older version of pathname so
-    # manually update it to 0.2.1.
-    - run: gem install --default pathname:0.2.1
-
     - run: bundle exec rake package spec steep
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v3.1.2
       with:
         name: ${{ matrix.ruby }}-${{ matrix.runner }}
         path: intermediate/*.gem
     strategy:
       matrix:
-        ruby: [3.2.1, 3.1.3, 3.0.5, 2.7.7]
+        ruby: [3.3.0-preview1, 3.2.2, 3.1.4, 3.0.6]
         runner:
           - macos-11
           - macos-12
@@ -44,3 +37,8 @@ jobs:
           - ubuntu-22.04
           - windows-2019
           - windows-2022
+        exclude:
+          - ruby: 3.3.0-preview1
+            runner: windows-2019
+          - ruby: 3.3.0-preview1
+            runner: windows-2022
