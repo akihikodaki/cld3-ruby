@@ -39,3 +39,13 @@ jobs:
           - ubuntu-24.04
           - windows-2019
           - windows-2022
+        exclude:
+          - ruby: 3.3.6
+            runner: windows-2019
+          - ruby: 3.3.6
+            runner: windows-2022
+        include:
+          - ruby: 3.3.5
+            runner: windows-2019
+          - ruby: 3.3.5
+            runner: windows-2022
