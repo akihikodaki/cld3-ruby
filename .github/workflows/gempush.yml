@@ -13,32 +13,42 @@ jobs:
     name: Spec
     runs-on: ${{ matrix.runner }}
     steps:
-    - uses: actions/checkout@v3.5.3
+    - uses: actions/checkout@v4.2.2
       with:
         submodules: true
-    - uses: ruby/setup-ruby@v1.152.0
+    - uses: ruby/setup-ruby@v1.200.0
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
 
     - run: bundle exec rake package spec steep
 
-    - uses: actions/upload-artifact@v3.1.2
+    - uses: actions/upload-artifact@v4.4.3
       with:
         name: ${{ matrix.ruby }}-${{ matrix.runner }}
         path: intermediate/*.gem
     strategy:
       matrix:
-        ruby: [3.3.0-preview1, 3.2.2, 3.1.4, 3.0.6]
+        ruby: [3.4.0-preview2, 3.3.6, 3.2.6, 3.1.6]
         runner:
-          - macos-11
-          - macos-12
+          - macos-13
+          - macos-14
           - ubuntu-20.04
           - ubuntu-22.04
+          - ubuntu-24.04
           - windows-2019
           - windows-2022
         exclude:
-          - ruby: 3.3.0-preview1
+          - ruby: 3.3.6
             runner: windows-2019
-          - ruby: 3.3.0-preview1
+          - ruby: 3.3.6
+            runner: windows-2022
+          - ruby: 3.4.0-preview2
+            runner: windows-2019
+          - ruby: 3.4.0-preview2
+            runner: windows-2022
+        include:
+          - ruby: 3.3.5
+            runner: windows-2019
+          - ruby: 3.3.5
             runner: windows-2022
