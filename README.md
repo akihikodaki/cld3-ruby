@@ -1,6 +1,11 @@
 # cld3-ruby
 cld3-ruby is an interface of [Compact Language Detector v3 (CLD3)](https://github.com/google/cld3) for Ruby.
 
+## This project is archived.
+
+[CLD3](https://github.com/google/cld3) is archived, so this project is.
+You may look for alternatives like [lingua_rb](https://github.com/ShallmentMo/lingua_rb).
+
 ## Usage
 
 ```ruby
